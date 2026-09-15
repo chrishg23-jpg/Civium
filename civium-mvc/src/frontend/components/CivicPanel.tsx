@@ -8,12 +8,12 @@ export function CivicPanel() {
   const [result, setResult] = useState<any>(null);
 
   async function handleSend() {
-    const signal = await sendSignal({
+    const response = await sendSignal({
       type,
       fromPersonId,
       payload: { text: payload }
     });
-    setResult(signal);
+    setResult(response);
   }
 
   return (
@@ -44,7 +44,14 @@ export function CivicPanel() {
       </button>
 
       {result && (
-        <pre>{JSON.stringify(result, null, 2)}</pre>
+        <div>
+          <pre>{JSON.stringify(result, null, 2)}</pre>
+
+          <h3>Updated Legitimacy</h3>
+          <p><strong>Person:</strong> {result.legitimacy.personScore.score}</p>
+          <p><strong>Household:</strong> {result.legitimacy.householdScore.score}</p>
+          <p><strong>Neighbourhood:</strong> {result.legitimacy.neighbourhoodScore.score}</p>
+        </div>
       )}
     </section>
   );
