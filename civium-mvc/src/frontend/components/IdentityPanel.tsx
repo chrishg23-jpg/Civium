@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { registerPerson } from '../api/client';
+import { Panel } from './ui/Panel';
 
 export function IdentityPanel() {
   const [name, setName] = useState("");
@@ -12,9 +13,7 @@ export function IdentityPanel() {
   }
 
   return (
-    <section style={{ marginBottom: '30px' }}>
-      <h2>Identity & Legitimacy</h2>
-
+    <Panel title="Identity">
       <input
         placeholder="Person name"
         value={name}
@@ -27,16 +26,11 @@ export function IdentityPanel() {
         onChange={e => setHouseholdId(e.target.value)}
       />
 
-      <button onClick={handleRegister}>
-        Register Person
-      </button>
+      <button onClick={handleRegister}>Register Person</button>
 
       {result && (
-        <div>
-          <pre>{JSON.stringify(result, null, 2)}</pre>
-          <p><strong>Legitimacy Score:</strong> {result.legitimacyScore}</p>
-        </div>
+        <pre>{JSON.stringify(result, null, 2)}</pre>
       )}
-    </section>
+    </Panel>
   );
 }
