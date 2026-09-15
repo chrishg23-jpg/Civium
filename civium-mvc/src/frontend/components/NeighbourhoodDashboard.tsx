@@ -25,7 +25,10 @@ export function NeighbourhoodDashboard() {
       </button>
 
       {result && (
-        <pre>{JSON.stringify(result, null, 2)}</pre>
+        <div>
+          <pre>{JSON.stringify(result, null, 2)}</pre>
+          <p><strong>Legitimacy Score:</strong> {result.legitimacyScore}</p>
+        </div>
       )}
     </section>
   );
