@@ -90,3 +90,29 @@ pre {
   font-size: 12px;
   overflow-x: auto;
 }
+
+.btn-primary {
+  background: #4f8cff;
+}
+
+.btn-primary:hover {
+  background: #3b6fd1;
+}
+
+.btn-danger {
+  background: #ff4f6b;
+}
+
+.btn-danger:hover {
+  background: #e13b56;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid #2b3558;
+}
+
+.btn-ghost:hover {
+  background: #141a33;
+}
+
