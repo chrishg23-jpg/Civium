@@ -32,3 +32,9 @@ export async function sendSignal(signal: any) {
 export async function getNeighbourhood(id: string) {
   return get(`/neighbourhoods/${id}`);
 }
+
+export async function joinNeighbourhood(householdId: string, neighbourhoodId: string) {
+  return post(`/neighbourhoods/${neighbourhoodId}/join`, {
+    householdId
+  });
+}
