@@ -61,4 +61,15 @@ export class CoreEngine {
     household.legitimacyScore = this.legitimacy.calculateHouseholdScore(household.id, signals).score;
     neighbourhood.legitimacyScore = this.legitimacy.calculateNeighbourhoodScore(neighbourhood.id, signals).score;
   }
+  
+async updateLegitimacyFlow(personId: string, householdId: string, neighbourhoodId: string, signals: CivicSignal[]) {
+  const personScore = this.legitimacy.calculatePersonScore(personId, signals);
+  const householdScore = this.legitimacy.calculateHouseholdScore(householdId, signals);
+  const neighbourhoodScore = this.legitimacy.calculateNeighbourhoodScore(neighbourhoodId, signals);
+
+  return {
+    personScore,
+    householdScore,
+    neighbourhoodScore
+  };
 }
