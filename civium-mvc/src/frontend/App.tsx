@@ -3,6 +3,7 @@ import { HouseholdDashboard } from './components/HouseholdDashboard';
 import { NeighbourhoodDashboard } from './components/NeighbourhoodDashboard';
 import { CivicPanel } from './components/CivicPanel';
 import { IdentityPanel } from './components/IdentityPanel';
+import { LookupPanel } from './components/LookupPanel';
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
       <NeighbourhoodDashboard />
       <CivicPanel />
       <IdentityPanel />
+      <LookupPanel />
     </div>
   );
 }
