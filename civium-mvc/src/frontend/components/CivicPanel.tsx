@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+ import React, { useState } from 'react';
 import { sendSignal } from '../api/client';
 import { Panel } from './ui/Panel';
 
@@ -38,9 +38,7 @@ export function CivicPanel() {
         onChange={e => setPayload(e.target.value)}
       />
 
-      <button onClick={handleSend}>
-        Send Signal
-      </button>
+      <button onClick={handleSend}>Send Signal</button>
 
       {result && (
         <div>
