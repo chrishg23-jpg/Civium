@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { getNeighbourhood, joinNeighbourhood } from '../api/client';
+import { Panel } from './ui/Panel';
 
 export function NeighbourhoodDashboard() {
   const [id, setId] = useState("");
@@ -18,22 +19,17 @@ export function NeighbourhoodDashboard() {
   }
 
   return (
-    <section style={{ marginBottom: '30px' }}>
-      <h2>Neighbourhood Dashboard</h2>
-
+    <Panel title="Neighbourhoods">
       <h3>Load Neighbourhood</h3>
       <input
         placeholder="Neighbourhood ID"
         value={id}
         onChange={e => setId(e.target.value)}
       />
-      <button onClick={handleFetch}>Load Neighbourhood</button>
+      <button onClick={handleFetch}>Load</button>
 
       {result && (
-        <div>
-          <pre>{JSON.stringify(result, null, 2)}</pre>
-          <p><strong>Legitimacy Score:</strong> {result.legitimacyScore}</p>
-        </div>
+        <pre>{JSON.stringify(result, null, 2)}</pre>
       )}
 
       <h3>Join Neighbourhood</h3>
@@ -42,14 +38,11 @@ export function NeighbourhoodDashboard() {
         value={householdId}
         onChange={e => setHouseholdId(e.target.value)}
       />
-      <button onClick={handleJoin}>Join Neighbourhood</button>
+      <button onClick={handleJoin}>Join</button>
 
       {joinResult && (
-        <div>
-          <h4>Updated Neighbourhood</h4>
-          <pre>{JSON.stringify(joinResult, null, 2)}</pre>
-        </div>
+        <pre>{JSON.stringify(joinResult, null, 2)}</pre>
       )}
-    </section>
+    </Panel>
   );
 }
