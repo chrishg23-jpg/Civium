@@ -38,3 +38,16 @@ export async function joinNeighbourhood(householdId: string, neighbourhoodId: st
     householdId
   });
 }
+
+export async function getPerson(id: string) {
+  return get(`/persons/${id}`);
+}
+
+export async function getHousehold(id: string) {
+  return get(`/households/${id}`);
+}
+
+export async function getNeighbourhood(id: string) {
+  return get(`/neighbourhoods/${id}`);
+}
+
