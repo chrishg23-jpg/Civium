@@ -4,6 +4,7 @@ import { NeighbourhoodDashboard } from './components/NeighbourhoodDashboard';
 import { CivicPanel } from './components/CivicPanel';
 import { IdentityPanel } from './components/IdentityPanel';
 import { LookupPanel } from './components/LookupPanel';
+import './styles.css';
 
 export default function App() {
   return (
