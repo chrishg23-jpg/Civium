@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { sendSignal } from '../api/client';
+import { Panel } from './ui/Panel';
 
 export function CivicPanel() {
   const [type, setType] = useState("PROPOSAL");
@@ -17,9 +18,7 @@ export function CivicPanel() {
   }
 
   return (
-    <section style={{ marginBottom: '30px' }}>
-      <h2>Civic Participation</h2>
-
+    <Panel title="Civic Participation">
       <select value={type} onChange={e => setType(e.target.value)}>
         <option value="PROPOSAL">Proposal</option>
         <option value="VOTE">Vote</option>
@@ -53,6 +52,6 @@ export function CivicPanel() {
           <p><strong>Neighbourhood:</strong> {result.legitimacy.neighbourhoodScore.score}</p>
         </div>
       )}
-    </section>
+    </Panel>
   );
 }
