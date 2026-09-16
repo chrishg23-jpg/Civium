@@ -1,21 +1,22 @@
 import React from 'react';
-import { HouseholdDashboard } from './components/HouseholdDashboard';
-import { NeighbourhoodDashboard } from './components/NeighbourhoodDashboard';
-import { CivicPanel } from './components/CivicPanel';
-import { IdentityPanel } from './components/IdentityPanel';
-import { LookupPanel } from './components/LookupPanel';
 import './styles.css';
+import { HouseholdDashboard } from './components/HouseholdDashboard';
+import { IdentityPanel } from './components/IdentityPanel';
+import { CivicPanel } from './components/CivicPanel';
+import { NeighbourhoodDashboard } from './components/NeighbourhoodDashboard';
+import { LookupPanel } from './components/LookupPanel';
 
-export default function App() {
+export function App() {
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-      <h1>Civium MVC</h1>
-
-      <HouseholdDashboard />
-      <NeighbourhoodDashboard />
-      <CivicPanel />
-      <IdentityPanel />
-      <LookupPanel />
+    <div className="app-shell">
+      <h1>Civium Core</h1>
+      <div className="app-grid">
+        <HouseholdDashboard />
+        <IdentityPanel />
+        <CivicPanel />
+        <NeighbourhoodDashboard />
+        <LookupPanel />
+      </div>
     </div>
   );
 }
