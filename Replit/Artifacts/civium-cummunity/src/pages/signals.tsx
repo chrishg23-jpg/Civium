@@ -1,0 +1,35 @@
+import { Check, FileClock, Plus, X } from 'lucide-react';
+import { type FormEvent, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { getListSignalsQueryKey, SignalInputType, useCreateSignal, useGetDashboard, useListSignals } from '@workspace/api-client-react';
+import { EmptyState, ErrorState, formatDate, Initials, PageLoader } from '@/components/civium-shell';
+
+const signalLabels = { request: 'Request', report: 'Report', proposal: 'Proposal', vote: 'Vote' };
+
+export default function SignalsPage() {
+  const queryClient = useQueryClient();
+  const signals = useListSignals();
+  const dashboard = useGetDashboard();
+  const create = useCreateSignal();
+  const [showCreate, setShowCreate] = useState(false);
+  const [form, setForm] = useState({ type: SignalInputType.request, title: '', summary: '' });
+
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!dashboard.data) return;
+    create.mutate({ data: { ...form, neighbourhoodId: dashboard.data.neighbourhood.id, proposalId: null } }, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: getListSignalsQueryKey() });
+        setForm({ type: SignalInputType.request, title: '', summary: '' });
+        setShowCreate(false);
+      },
+    });
+  }
+
+  return <div className="space-y-8">
+    <section className="flex flex-col justify-between gap-5 md:flex-row md:items-end"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-accent">Evidence before escalation</p><h1 className="serif mt-2 text-4xl tracking-[-.04em] md:text-5xl">Civic record</h1><p className="mt-3 max-w-xl text-[15px] leading-7 text-muted-foreground">A transparent stream for proposals, votes, requests, and reports. Record what happened before deciding what it should mean.</p></div><button onClick={() => setShowCreate(true)} className="inline-flex w-fit items-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-primary-foreground transition-transform hover:-translate-y-0.5" data-testid="button-open-create-signal"><Plus size={16} /> Record a signal</button></section>
+    <div className="rounded-2xl border border-border bg-secondary/50 p-5 md:flex md:items-center md:gap-4"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-card text-accent"><FileClock size={18} /></span><div className="mt-3 md:mt-0"><p className="text-sm font-bold">Signals are evidence, not legitimacy scores.</p><p className="mt-1 text-sm leading-6 text-muted-foreground">Civium keeps the event record explicit so future governance rules can be reviewed instead of hidden in a number.</p></div></div>
+    {signals.isLoading ? <PageLoader /> : signals.isError ? <ErrorState message="The civic record could not be loaded." /> : (signals.data ?? []).length === 0 ? <EmptyState title="No signals recorded yet" detail="Proposals and votes will appear here automatically. You can also record a local request or report." action={<button onClick={() => setShowCreate(true)} className="rounded-xl bg-primary px-4 py-3 text-xs font-bold text-primary-foreground">Record a signal</button>} /> : <div className="overflow-hidden rounded-2xl border border-border bg-card"><div className="divide-y divide-border">{signals.data?.map((signal) => <article key={signal.id} className="flex gap-4 p-5 md:p-6" data-testid={`row-signal-${signal.id}`}><Initials value={signal.actorInitials} tone={signal.type === 'report' ? 'coral' : signal.type === 'request' ? 'saffron' : 'teal'} /><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><span className="rounded-full bg-secondary px-2.5 py-1 text-[10px] font-bold uppercase tracking-[.14em] text-primary">{signalLabels[signal.type]}</span><span className="text-xs text-muted-foreground">{formatDate(signal.createdAt, true)}</span></div><h2 className="mt-3 text-base font-bold">{signal.title}</h2><p className="mt-1 text-sm leading-6 text-muted-foreground">{signal.summary}</p><p className="mt-3 text-xs text-muted-foreground">Recorded by <span className="font-semibold text-foreground">{signal.actor}</span></p></div></article>)}</div></div>}
+    {showCreate && <div className="fixed inset-0 z-50 flex items-end justify-center bg-[hsl(255_20%_18%/0.45)] p-0 backdrop-blur-sm sm:items-center sm:p-5"><div className="w-full max-w-xl rounded-t-3xl bg-card p-6 shadow-2xl sm:rounded-3xl sm:p-8" role="dialog" aria-modal="true" aria-labelledby="create-signal-title" data-testid="dialog-create-signal"><div className="flex items-start justify-between"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-accent">Add to the record</p><h2 id="create-signal-title" className="serif mt-1 text-3xl">Record a civic signal</h2></div><button onClick={() => setShowCreate(false)} className="rounded-xl p-2 text-muted-foreground hover:bg-muted" aria-label="Close create signal"><X size={18} /></button></div><form onSubmit={submit} className="mt-7 space-y-5"><label className="block"><span className="text-xs font-bold">Signal type</span><select value={form.type} onChange={(event) => setForm({ ...form, type: event.target.value as typeof form.type })} className="mt-2 w-full rounded-xl border border-input bg-background px-3 py-3 text-sm outline-none focus:ring-2 focus:ring-accent" data-testid="select-signal-type"><option value={SignalInputType.request}>Request</option><option value={SignalInputType.report}>Report</option></select></label><label className="block"><span className="text-xs font-bold">Title</span><input required value={form.title} onChange={(event) => setForm({ ...form, title: event.target.value })} className="mt-2 w-full rounded-xl border border-input bg-background px-3 py-3 text-sm outline-none focus:ring-2 focus:ring-accent" placeholder="What needs the neighbourhood's attention?" data-testid="input-signal-title" /></label><label className="block"><span className="text-xs font-bold">What happened?</span><textarea required value={form.summary} onChange={(event) => setForm({ ...form, summary: event.target.value })} className="mt-2 min-h-28 w-full rounded-xl border border-input bg-background px-3 py-3 text-sm outline-none focus:ring-2 focus:ring-accent" placeholder="Add enough context for neighbours to understand the signal." data-testid="input-signal-summary" /></label>{create.isError && <p className="text-xs text-[hsl(7_63%_40%)]">We could not record that signal. Please try again.</p>}<button disabled={create.isPending || !dashboard.data} type="submit" className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3.5 text-sm font-bold text-primary-foreground disabled:opacity-60" data-testid="button-submit-signal">{create.isPending ? 'Recording…' : <><Check size={16} /> Add to civic record</>}</button></form></div></div>}
+  </div>;
+}
